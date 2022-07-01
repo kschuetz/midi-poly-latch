@@ -54,7 +54,7 @@ build_logs/
 .idea
 
 # CLion
-cmake-build-debug/
+cmake-build-debug*/
 
 # CMake
 CMakeLists.txt.user
