@@ -36,8 +36,24 @@ target_compile_features("${PROJECT_NAME}" PRIVATE cxx_std_20)
 set(SourceFiles
         src/PluginEditor.h
         src/PluginProcessor.h
+        src/core/CommonTypes.h
+        src/core/Consts.h
+        src/core/Parameters.h
+        src/core/NoteIndex.h
+        src/core/NoteState.h
+        src/core/NoteList.h
+        src/core/State.h
+        src/core/Stealing.h
         src/PluginEditor.cpp
-        src/PluginProcessor.cpp)
+        src/PluginProcessor.cpp
+        src/core/CommonTypes.cpp
+        src/core/Parameters.cpp
+        src/core/NoteIndex.cpp
+        src/core/NoteState.cpp
+        src/core/NoteList.cpp
+        src/core/State.cpp
+        src/core/Stealing.cpp
+        )
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})
 
 set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
@@ -62,3 +78,47 @@ target_link_libraries("${PROJECT_NAME}"
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+# **************** Testing *****************
+
+enable_testing()
+
+file(GLOB_RECURSE TestFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/tests PREFIX "" FILES ${TestFiles})
+
+# Use Catch2 v3 on the devel branch
+Include(FetchContent)
+FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_PROGRESS TRUE
+        GIT_SHALLOW TRUE
+        GIT_TAG origin/devel)
+FetchContent_MakeAvailable(Catch2) # find_package equivalent
+
+# Set up the test executable
+add_executable(tests ${TestFiles})
+target_compile_features(tests PRIVATE cxx_std_20)
+
+# Our test executable also wants to know about our plugin code...
+target_include_directories(tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain "${PROJECT_NAME}" ${JUCE_DEPENDENCIES})
+
+# Make an Xcode Scheme for the test executable so we can run tests in the IDE
+set_target_properties(tests PROPERTIES XCODE_GENERATE_SCHEME ON)
+
+# Organize the test source in the tests/ folder in the IDE
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/tests PREFIX "" FILES ${TestFiles})
+
+# Load and use the .cmake file provided by Catch2
+# https://github.com/catchorg/Catch2/blob/devel/docs/cmake-integration.md
+# We have to manually provide the source directory here for now
+include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)
+catch_discover_tests(tests)
+
+# Color our warnings and errors
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    add_compile_options(-fdiagnostics-color=always)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_compile_options(-fcolor-diagnostics)
+endif ()
