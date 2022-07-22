@@ -5,23 +5,36 @@
 
 #include "Consts.h"
 #include "NoteState.h"
+#include "State.h"
 #include "NoteList.h"
 
 namespace Stealing {
-    class Strategy {
-        virtual void selectNotesToSteal(NoteState(&noteStates)[KEY_COUNT], int numNotesToSteal, NoteList &result) = 0;
 
-    public:
-        virtual ~Strategy();
+    enum class PrimaryStrategy {
+        Oldest,
+        Newest,
+        Lowest,
+        Highest,
+        Closest,
+        MostDistant,
+        LeastDistant,
+        MostCentral,
+        Random,
+        RandomInner,
+        RandomOuter,
     };
 
-    class Oldest final : public Strategy {
-        void selectNotesToSteal(NoteState(&noteStates)[KEY_COUNT], int numNotesToSteal, NoteList &result) override;
+    enum class SecondaryStrategy {
+        StealRandom,
+        StealLower,
+        StealHigher
     };
 
-    class Newest final : public Strategy {
-        void selectNotesToSteal(NoteState(&noteStates)[KEY_COUNT], int numNotesToSteal, NoteList &result) override;
+    struct Strategy {
+        PrimaryStrategy primary;
+        SecondaryStrategy secondary;
     };
 
-    std::vector<std::unique_ptr<Strategy>> allStrategies();
+    NoteNumber selectNoteToSteal(const Strategy &strategy, const State &state, NoteNumber userNotePlayed);
+
 }

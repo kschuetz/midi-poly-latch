@@ -3,8 +3,9 @@
 #include "Consts.h"
 #include "NoteState.h"
 #include "NoteList.h"
+#include "NoteIndex.h"
 
-class State {
+class State final {
 public:
     void activateNote(NoteNumber noteNumber, Velocity velocity, Timestamp ts);
 
@@ -14,13 +15,22 @@ public:
 
     void clear();
 
-    const NoteList &getActiveNotes();
-
     int getPlayingCount();
 
     NoteStatus getStatus(NoteNumber noteNumber);
 
+    [[nodiscard]] const NoteState &getNoteState(NoteNumber noteNumber) const;
+
+    [[nodiscard]] const NoteIndexRead &indexByPitch() const {
+        return m_indexByPitch;
+    }
+
+    [[nodiscard]] const NoteIndexRead &indexByAge() const {
+        return m_indexByAge;
+    }
+
 private:
     NoteState notes[KEY_COUNT];
-    NoteList activeNotes;
+    NoteIndex m_indexByPitch;
+    NoteIndex m_indexByAge;
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <compare>
+
 using NoteNumber = signed char;
 
 constexpr NoteNumber NO_NOTE = -1;
@@ -16,6 +18,18 @@ public:
         value = other.value;
         return *this;
     }
+
+    [[nodiscard]] int compare(Timestamp other) const;
+
+    bool operator==(Timestamp other) const;
+
+    bool operator<(Timestamp other) const;
+
+    bool operator<=(Timestamp other) const;
+
+    bool operator>(Timestamp other) const;
+
+    bool operator>=(Timestamp other) const;
 
     unsigned int value;
 };

@@ -80,3 +80,46 @@ void NoteIndex::clear() {
     back = NO_NOTE;
     size = 0;
 }
+
+NoteIndexIterator NoteIndex::begin() const {
+    return {front, forward};
+}
+
+NoteIndexIterator NoteIndex::end() const {
+    return {NO_NOTE, forward};
+}
+
+NoteIndexIterator NoteIndex::rbegin() const {
+    return {back, reverse};
+}
+
+NoteIndexIterator NoteIndex::rend() const {
+    return {NO_NOTE, reverse};
+}
+
+NoteIndexIterator::reference NoteIndexIterator::operator*() const {
+    return const_cast<NoteNumber &>(m_current);
+}
+
+NoteIndexIterator::pointer NoteIndexIterator::operator->() {
+    return &m_current;
+}
+
+NoteIndexIterator &NoteIndexIterator::operator++() {
+    m_current = m_list[m_current];
+    return *this;
+}
+
+const NoteIndexIterator NoteIndexIterator::operator++(int) {
+    NoteIndexIterator tmp = {m_current, m_list};
+    m_current = m_list[m_current];
+    return tmp;
+}
+
+bool operator==(const NoteIndexIterator &a, const NoteIndexIterator &b) {
+    return a.m_current == b.m_current;
+}
+
+bool operator!=(const NoteIndexIterator &a, const NoteIndexIterator &b) {
+    return a.m_current != b.m_current;
+}
