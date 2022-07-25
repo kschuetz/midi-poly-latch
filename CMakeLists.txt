@@ -42,6 +42,7 @@ set(SourceFiles
         src/core/NoteIndex.h
         src/core/NoteState.h
         src/core/NoteList.h
+        src/core/Rng.h
         src/core/State.h
         src/core/Stealing.h
         src/PluginEditor.cpp
@@ -51,6 +52,7 @@ set(SourceFiles
         src/core/NoteIndex.cpp
         src/core/NoteState.cpp
         src/core/NoteList.cpp
+        src/core/Rng.cpp
         src/core/State.cpp
         src/core/Stealing.cpp
         )

@@ -2,13 +2,13 @@
 
 void State::activateNote(const NoteNumber noteNumber, const Velocity velocity, const Timestamp ts) {
     if (notes[noteNumber].status == NoteStatus::NotPlaying) {
-        m_indexByPitch.insert(noteNumber, [noteNumber](NoteNumber other) -> bool { return noteNumber < other; });
-        m_indexByAge.insert(noteNumber,
-                            [ts, this, noteNumber](NoteNumber other) -> bool {
-                                auto compared = ts.compare(notes[other].startedPlaying);
-                                if (compared == 0) return noteNumber < other;
-                                else return compared < 0;
-                            });
+        m_indexByPitch.insert(noteNumber);
+//        m_indexByAge.insert(noteNumber,
+//                            [ts, this, noteNumber](NoteNumber other) -> bool {
+//                                auto compared = ts.compare(notes[other].startedPlaying);
+//                                if (compared == 0) return noteNumber < other;
+//                                else return compared < 0;
+//                            });
     }
     auto &noteState = notes[noteNumber];
     noteState.status = NoteStatus::Playing;
@@ -40,7 +40,7 @@ void State::clear() {
 }
 
 int State::getPlayingCount() {
-    return m_indexByPitch.getSize();
+    return m_indexByPitch.size();
 }
 
 NoteStatus State::getStatus(NoteNumber noteNumber) {

@@ -8,19 +8,19 @@ namespace Stealing {
 
     NoteNumber selectFirst(const NoteIndexIterator &begin, const NoteIndexIterator &end);
 
-    NoteNumber selectByAge(const Strategy &strategy, const State &state, PreferAge preferAge);
+    NoteNumber selectByAge(const Strategy &strategy, const State &state, Rng &rng, PreferAge preferAge);
 
-    NoteNumber selectNoteToSteal(const Strategy &strategy, const State &state, NoteNumber userNotePlayed) {
+    NoteNumber selectNoteToSteal(const Strategy &strategy, const State &state, Rng &rng, NoteNumber userNotePlayed) {
         const NoteIndexRead &indexByPitch = state.indexByPitch();
         switch (strategy.primary) {
             case PrimaryStrategy::Oldest:
-                return selectByAge(strategy, state, PreferAge::Older);
+                return selectByAge(strategy, state, rng, PreferAge::Older);
             case PrimaryStrategy::Newest:
-                return selectByAge(strategy, state, PreferAge::Newer);
+                return selectByAge(strategy, state, rng, PreferAge::Newer);
             case PrimaryStrategy::Lowest:
-                return selectFirst(indexByPitch.begin(), indexByPitch.end());
+                return indexByPitch.front();
             case PrimaryStrategy::Highest:
-                return selectFirst(indexByPitch.rbegin(), indexByPitch.rend());
+                return indexByPitch.back();
             case PrimaryStrategy::Closest:
                 break;
             case PrimaryStrategy::MostDistant:
@@ -40,16 +40,16 @@ namespace Stealing {
     }
 
 
-    NoteNumber selectByAge(const Strategy &strategy, const State &state, PreferAge preferAge) {
+    NoteNumber selectByAge(const Strategy &strategy, const State &state, Rng &rng, PreferAge preferAge) {
         auto &index = state.indexByPitch();
-        auto it = index.begin();
-        if (it == index.end()) return NO_NOTE;
+        auto it = index.cbegin();
+        if (it == index.cend()) return NO_NOTE;
         auto current = *it;
         auto currentTimestamp = state.getNoteState(current).startedPlaying;
         auto best = current;
         auto bestTimestamp = currentTimestamp;
         auto ties = 0;
-        while (++it != index.end()) {
+        while (++it != index.cend()) {
             currentTimestamp = state.getNoteState(current).startedPlaying;
             auto compared = currentTimestamp.compare(bestTimestamp);
             if (compared == 0) {

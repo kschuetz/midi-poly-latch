@@ -35,26 +35,38 @@ private:
 
 class NoteIndexRead {
 public:
+    [[nodiscard]] virtual NoteNumber front() const = 0;
+
+    [[nodiscard]] virtual NoteNumber back() const = 0;
+
     [[nodiscard]] virtual int positionOf(NoteNumber noteNumber) const = 0;
 
     [[nodiscard]] virtual bool contains(NoteNumber noteNumber) const = 0;
 
-    [[nodiscard]] virtual int getSize() const = 0;
+    [[nodiscard]] virtual int size() const = 0;
 
-    [[nodiscard]] virtual NoteIndexIterator begin() const = 0;
+    [[nodiscard]] virtual NoteIndexIterator cbegin() const = 0;
 
-    [[nodiscard]] virtual NoteIndexIterator end() const = 0;
+    [[nodiscard]] virtual NoteIndexIterator cend() const = 0;
 
-    [[nodiscard]] virtual NoteIndexIterator rbegin() const = 0;
+    [[nodiscard]] virtual NoteIndexIterator crbegin() const = 0;
 
-    [[nodiscard]] virtual NoteIndexIterator rend() const = 0;
+    [[nodiscard]] virtual NoteIndexIterator crend() const = 0;
 };
 
 class NoteIndex final : public NoteIndexRead {
 public:
-    int insert(NoteNumber noteNumber, const std::function<bool(NoteNumber)> &shouldInsertBefore);
+    int insert(NoteNumber noteNumber);
 
     bool remove(NoteNumber noteNumber);
+
+    [[nodiscard]] NoteNumber front() const override {
+        return m_front;
+    }
+
+    [[nodiscard]] NoteNumber back() const override {
+        return m_back;
+    }
 
     [[nodiscard]] int positionOf(NoteNumber noteNumber) const override;
 
@@ -62,22 +74,22 @@ public:
 
     void clear();
 
-    [[nodiscard]] int getSize() const override {
-        return size;
+    [[nodiscard]] int size() const override {
+        return m_size;
     }
 
-    NoteIndexIterator begin() const override;
+    NoteIndexIterator cbegin() const override;
 
-    NoteIndexIterator end() const override;
+    NoteIndexIterator cend() const override;
 
-    NoteIndexIterator rbegin() const override;
+    NoteIndexIterator crbegin() const override;
 
-    NoteIndexIterator rend() const override;
+    NoteIndexIterator crend() const override;
 
 private:
-    int size = 0;
+    int m_size = 0;
     NoteNumber forward[KEY_COUNT]{};
     NoteNumber reverse[KEY_COUNT]{};
-    NoteNumber front = NO_NOTE;
-    NoteNumber back = NO_NOTE;
+    NoteNumber m_front = NO_NOTE;
+    NoteNumber m_back = NO_NOTE;
 };

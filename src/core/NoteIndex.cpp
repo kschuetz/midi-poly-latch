@@ -1,12 +1,13 @@
 #include "NoteIndex.h"
 
-int NoteIndex::insert(NoteNumber noteNumber, const std::function<bool(NoteNumber)> &shouldInsertBefore) {
-    NoteNumber insertionPoint = front;
+int NoteIndex::insert(NoteNumber noteNumber) {
+    if (!isValidNote(noteNumber)) return -1;
+    NoteNumber insertionPoint = m_front;
     NoteNumber prev = NO_NOTE;
     int position = 0;
     while (isValidNote(insertionPoint)) {
         if (insertionPoint == noteNumber) return position;
-        auto insertHere = shouldInsertBefore(insertionPoint);
+        auto insertHere = insertionPoint > noteNumber;
         if (insertHere) break;
         else {
             position++;
@@ -19,22 +20,22 @@ int NoteIndex::insert(NoteNumber noteNumber, const std::function<bool(NoteNumber
         next = forward[prev];
         forward[prev] = noteNumber;
     } else {
-        next = front;
-        front = noteNumber;
+        next = m_front;
+        m_front = noteNumber;
     }
     forward[noteNumber] = next;
     reverse[noteNumber] = prev;
     if (isValidNote(next)) {
         reverse[next] = noteNumber;
     } else {
-        back = noteNumber;
+        m_back = noteNumber;
     }
-    size += 1;
+    m_size += 1;
     return position;
 }
 
 bool NoteIndex::remove(NoteNumber noteNumber) {
-    NoteNumber current = front;
+    NoteNumber current = m_front;
     NoteNumber prev = NO_NOTE;
     while (isValidNote(current)) {
         if (current == noteNumber) {
@@ -42,16 +43,17 @@ bool NoteIndex::remove(NoteNumber noteNumber) {
             if (isValidNote(prev)) {
                 forward[prev] = next;
             } else {
-                front = next;
+                m_front = next;
             }
             if (isValidNote(next)) {
                 reverse[next] = prev;
             } else {
-                back = prev;
+                m_back = prev;
             }
-            size -= 1;
+            m_size -= 1;
             return true;
         } else {
+            prev = current;
             current = forward[current];
         }
     }
@@ -59,16 +61,16 @@ bool NoteIndex::remove(NoteNumber noteNumber) {
 }
 
 int NoteIndex::positionOf(NoteNumber noteNumber) const {
-    NoteNumber current = front;
-    int position = NO_NOTE;
+    NoteNumber current = m_front;
+    int position = 0;
     while (isValidNote(current)) {
         if (current == noteNumber) return position;
         else {
             current = forward[current];
-            position += -1;
+            ++position;
         }
     }
-    return NO_NOTE;
+    return -1;
 }
 
 bool NoteIndex::contains(NoteNumber noteNumber) const {
@@ -76,24 +78,24 @@ bool NoteIndex::contains(NoteNumber noteNumber) const {
 }
 
 void NoteIndex::clear() {
-    front = NO_NOTE;
-    back = NO_NOTE;
-    size = 0;
+    m_front = NO_NOTE;
+    m_back = NO_NOTE;
+    m_size = 0;
 }
 
-NoteIndexIterator NoteIndex::begin() const {
-    return {front, forward};
+NoteIndexIterator NoteIndex::cbegin() const {
+    return {m_front, forward};
 }
 
-NoteIndexIterator NoteIndex::end() const {
+NoteIndexIterator NoteIndex::cend() const {
     return {NO_NOTE, forward};
 }
 
-NoteIndexIterator NoteIndex::rbegin() const {
-    return {back, reverse};
+NoteIndexIterator NoteIndex::crbegin() const {
+    return {m_back, reverse};
 }
 
-NoteIndexIterator NoteIndex::rend() const {
+NoteIndexIterator NoteIndex::crend() const {
     return {NO_NOTE, reverse};
 }
 

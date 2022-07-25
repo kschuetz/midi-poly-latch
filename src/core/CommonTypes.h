@@ -6,6 +6,9 @@ using NoteNumber = signed char;
 
 constexpr NoteNumber NO_NOTE = -1;
 
+constexpr NoteNumber MIN_NOTE = 0;
+constexpr NoteNumber MAX_NOTE = 127;
+
 inline bool isValidNote(NoteNumber noteNumber) {
     return noteNumber >= 0;
 }
