@@ -34,64 +34,41 @@ private:
     const NoteNumber (&m_list)[KEY_COUNT];
 };
 
-class NoteIndexRead {
-public:
-    [[nodiscard]] virtual NoteNumber front() const = 0;
-
-    [[nodiscard]] virtual NoteNumber back() const = 0;
-
-    [[nodiscard]] virtual int positionOf(NoteNumber noteNumber) const = 0;
-
-    [[nodiscard]] virtual bool contains(NoteNumber noteNumber) const = 0;
-
-    [[nodiscard]] virtual int size() const = 0;
-
-    [[nodiscard]] virtual NoteNumber selectRandom(Rng &rng) const = 0;
-
-    [[nodiscard]] virtual NoteIndexIterator cbegin() const = 0;
-
-    [[nodiscard]] virtual NoteIndexIterator cend() const = 0;
-
-    [[nodiscard]] virtual NoteIndexIterator crbegin() const = 0;
-
-    [[nodiscard]] virtual NoteIndexIterator crend() const = 0;
-};
-
-class NoteIndex final : public NoteIndexRead {
+class NoteIndex final {
 public:
     int insert(NoteNumber noteNumber);
 
     bool remove(NoteNumber noteNumber);
 
-    [[nodiscard]] NoteNumber front() const override {
+    [[nodiscard]] NoteNumber front() const {
         return m_front;
     }
 
-    [[nodiscard]] NoteNumber back() const override {
+    [[nodiscard]] NoteNumber back() const {
         return m_back;
     }
 
     [[nodiscard]] NoteNumber atPosition(int index) const;
 
-    [[nodiscard]] int positionOf(NoteNumber noteNumber) const override;
+    [[nodiscard]] int positionOf(NoteNumber noteNumber) const;
 
-    [[nodiscard]] bool contains(NoteNumber noteNumber) const override;
+    [[nodiscard]] bool contains(NoteNumber noteNumber) const;
 
     void clear();
 
-    [[nodiscard]] int size() const override {
+    [[nodiscard]] int size() const {
         return m_size;
     }
 
-    [[nodiscard]] NoteNumber selectRandom(Rng &rng) const override;
+    [[nodiscard]] NoteNumber selectRandom(Rng &rng) const;
 
-    NoteIndexIterator cbegin() const override;
+    NoteIndexIterator cbegin() const;
 
-    NoteIndexIterator cend() const override;
+    NoteIndexIterator cend() const;
 
-    NoteIndexIterator crbegin() const override;
+    NoteIndexIterator crbegin() const;
 
-    NoteIndexIterator crend() const override;
+    NoteIndexIterator crend() const;
 
 private:
     int m_size = 0;

@@ -28,12 +28,10 @@ void State::beginRelease(NoteNumber noteNumber, Velocity velocity, Timestamp ts)
 void State::deactivateNote(NoteNumber noteNumber) {
     notes[noteNumber].status = NoteStatus::NotPlaying;
     m_indexByPitch.remove(noteNumber);
-    m_indexByAge.remove(noteNumber);
 }
 
 void State::clear() {
     m_indexByPitch.clear();
-    m_indexByAge.clear();
     for (auto &note: notes) {
         note.status = NoteStatus::NotPlaying;
     }

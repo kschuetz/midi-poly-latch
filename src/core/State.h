@@ -21,16 +21,11 @@ public:
 
     [[nodiscard]] const NoteState &getNoteState(NoteNumber noteNumber) const;
 
-    [[nodiscard]] const NoteIndexRead &indexByPitch() const {
+    [[nodiscard]] const NoteIndex &indexByPitch() const {
         return m_indexByPitch;
-    }
-
-    [[nodiscard]] const NoteIndexRead &indexByAge() const {
-        return m_indexByAge;
     }
 
 private:
     NoteState notes[KEY_COUNT];
     NoteIndex m_indexByPitch;
-    NoteIndex m_indexByAge;
 };

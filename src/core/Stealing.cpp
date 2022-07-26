@@ -8,14 +8,14 @@ enum class PreferAge {
 
 NoteNumber selectByAge(const Strategy &strategy, const State &state, Rng &rng, PreferAge preferAge);
 
-NoteNumber selectRandomInner(const NoteIndexRead &noteIndex, Rng &rng);
+NoteNumber selectRandomInner(const NoteIndex &noteIndex, Rng &rng);
 
-NoteNumber selectRandomOuter(const NoteIndexRead &noteIndex, Rng &rng);
+NoteNumber selectRandomOuter(const NoteIndex &noteIndex, Rng &rng);
 
 NoteNumber applySecondaryStrategy(SecondaryStrategy secondaryStrategy, Rng &rng, const NoteList &candidates);
 
 NoteNumber selectNoteToSteal(const Strategy &strategy, const State &state, Rng &rng, NoteNumber userNotePlayed) {
-    const NoteIndexRead &indexByPitch = state.indexByPitch();
+    const NoteIndex &indexByPitch = state.indexByPitch();
     switch (strategy.primary) {
         case PrimaryStrategy::Oldest:
             return selectByAge(strategy, state, rng, PreferAge::Older);
@@ -81,7 +81,7 @@ NoteNumber selectByAge(const Strategy &strategy, const State &state, Rng &rng, P
     }
 }
 
-NoteNumber selectRandomOuter(const NoteIndexRead &noteIndex, Rng &rng) {
+NoteNumber selectRandomOuter(const NoteIndex &noteIndex, Rng &rng) {
     if (noteIndex.size() <= 2) {
         return noteIndex.selectRandom(rng);
     } else {
@@ -92,7 +92,7 @@ NoteNumber selectRandomOuter(const NoteIndexRead &noteIndex, Rng &rng) {
     }
 }
 
-NoteNumber selectRandomInner(const NoteIndexRead &noteIndex, Rng &rng) {
+NoteNumber selectRandomInner(const NoteIndex &noteIndex, Rng &rng) {
     if (noteIndex.size() <= 2) {
         return noteIndex.selectRandom(rng);
     } else {
