@@ -5,6 +5,8 @@ using namespace Stealing;
 template<typename C = std::less<>>
 NoteNumber selectByAge(const Strategy &strategy, const State &state, Rng &rng, C cmp = C{});
 
+NoteNumber selectMostCentral(SecondaryStrategy secondaryStrategy, const NoteIndex &noteIndex, Rng &rng);
+
 NoteNumber selectRandomInner(const NoteIndex &noteIndex, Rng &rng);
 
 NoteNumber selectRandomOuter(const NoteIndex &noteIndex, Rng &rng);
@@ -27,7 +29,7 @@ NoteNumber selectNoteToSteal(const Strategy &strategy, const State &state, Rng &
         case PrimaryStrategy::LeastDistant:
             break;
         case PrimaryStrategy::MostCentral:
-            break;
+            return selectMostCentral(strategy.secondary, indexByPitch, rng);
         case PrimaryStrategy::Random:
             return indexByPitch.selectRandom(rng);
         case PrimaryStrategy::RandomInner:
@@ -80,6 +82,27 @@ NoteNumber selectByAge(const Strategy &strategy, const State &state, Rng &rng, C
         return best;
     } else {
         return breakTiesForAge(strategy, state, rng, index, bestTimestamp);
+    }
+}
+
+NoteNumber selectMostCentral(SecondaryStrategy secondaryStrategy, const NoteIndex &noteIndex, Rng &rng) {
+    auto noteCount = noteIndex.size();
+    if (noteCount <= 1) return NO_NOTE;
+    else if (noteCount == 1) return noteIndex.front();
+    else if (noteCount % 2 == 1) {
+        auto position = (noteCount + 1) / 2;
+        return noteIndex.atPosition(position);
+    } else {
+        NoteList candidates;
+        if (noteCount == 2) {
+            candidates.add(noteIndex.front());
+            candidates.add(noteIndex.back());
+        } else {
+            auto position = noteCount / 2;
+            candidates.add(noteIndex.atPosition(position - 1));
+            candidates.add(noteIndex.atPosition(position));
+        }
+        return applySecondaryStrategy(secondaryStrategy, rng, candidates);
     }
 }
 
