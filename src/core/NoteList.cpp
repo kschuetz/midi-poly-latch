@@ -1,26 +1,21 @@
 #include "NoteList.h"
 
 void NoteList::add(NoteNumber noteNumber) {
-    if (size < KEY_COUNT && !contains(noteNumber)) {
-        entries[size++] = noteNumber;
+    if (m_size < KEY_COUNT) {
+        m_entries[m_size++] = noteNumber;
     }
 }
 
 void NoteList::clear() {
-    size = 0;
-}
-
-[[nodiscard]]
-int NoteList::getSize() const {
-    return size;
+    m_size = 0;
 }
 
 NoteList::Iterator NoteList::begin() {
-    return {&entries[0]};
+    return {&m_entries[0]};
 }
 
 NoteList::Iterator NoteList::end() {
-    return {&entries[size]};
+    return {&m_entries[m_size]};
 }
 
 NoteList::Iterator::reference NoteList::Iterator::operator*() const {
@@ -51,28 +46,23 @@ bool operator!=(const NoteList::Iterator &a, const NoteList::Iterator &b) {
 }
 
 bool NoteList::contains(NoteNumber noteNumber) const {
-    for (int i = 0; i < size; i++) {
-        if (entries[i] == noteNumber) return true;
+    for (int i = 0; i < m_size; i++) {
+        if (m_entries[i] == noteNumber) return true;
     }
     return false;
 }
 
-int NoteList::remove(NoteNumber noteNumber) {
-    int removedCount = 0;
-    int src = 0;
-    int dest = 0;
-    while (src < size) {
-        auto entry = entries[src];
-        if (entry == noteNumber) {
-            removedCount++;
-        } else {
-            if (dest != src) {
-                entries[dest] = entry;
-            }
-            dest++;
-        }
-        src++;
+NoteNumber NoteList::atPosition(int index) const {
+    if (index >= 0 && index < m_size) {
+        return m_entries[index];
+    } else return NO_NOTE;
+}
+
+NoteNumber NoteList::selectRandom(Rng &rng) const {
+    if (m_size < 1) return NO_NOTE;
+    else if (m_size == 1) return m_entries[0];
+    else {
+        auto choice = rng.generate(m_size);
+        return m_entries[choice];
     }
-    size -= removedCount;
-    return removedCount;
 }

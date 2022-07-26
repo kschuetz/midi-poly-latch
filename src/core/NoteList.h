@@ -5,18 +5,33 @@
 
 #include "Consts.h"
 #include "CommonTypes.h"
+#include "Rng.h"
 
+using NoteListEntries = NoteNumber[KEY_COUNT];
+
+/**
+ * List of notes stored in an array. Unordered, with a maximum size of KEY_COUNT.
+ * Duplicates are not removed.
+ */
 class NoteList final {
 public:
     void add(NoteNumber noteNumber);
-
-    int remove(NoteNumber noteNumber);
 
     [[nodiscard]] bool contains(NoteNumber noteNumber) const;
 
     void clear();
 
-    [[nodiscard]] int getSize() const;
+    [[nodiscard]] NoteNumber atPosition(int index) const;
+
+    [[nodiscard]] int size() const {
+        return m_size;
+    }
+
+    [[nodiscard]] NoteListEntries &entries() {
+        return m_entries;
+    }
+
+    [[nodiscard]] NoteNumber selectRandom(Rng &rng) const;
 
     struct Iterator {
         using iterator_category = std::forward_iterator_tag;
@@ -48,6 +63,6 @@ public:
     Iterator end();
 
 private:
-    int size = 0;
-    NoteNumber entries[KEY_COUNT]{};
+    int m_size = 0;
+    NoteListEntries m_entries{};
 };

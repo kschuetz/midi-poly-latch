@@ -16,7 +16,6 @@ namespace Stealing {
         Newest,
         Lowest,
         Highest,
-        Closest,
         MostDistant,
         LeastDistant,
         MostCentral,

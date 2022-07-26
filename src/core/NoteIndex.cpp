@@ -99,6 +99,28 @@ NoteIndexIterator NoteIndex::crend() const {
     return {NO_NOTE, reverse};
 }
 
+NoteNumber NoteIndex::atPosition(int index) const {
+    auto current = m_front;
+    while (isValidNote(current)) {
+        if (index == 0) {
+            return current;
+        } else {
+            --index;
+            current = forward[current];
+        }
+    }
+    return NO_NOTE;
+}
+
+NoteNumber NoteIndex::selectRandom(Rng &rng) const {
+    if (m_size < 1) return NO_NOTE;
+    else if (m_size == 1) return front();
+    else {
+        auto choice = rng.generate(m_size);
+        return atPosition(choice);
+    }
+}
+
 NoteIndexIterator::reference NoteIndexIterator::operator*() const {
     return const_cast<NoteNumber &>(m_current);
 }

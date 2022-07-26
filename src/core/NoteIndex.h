@@ -6,6 +6,7 @@
 
 #include "Consts.h"
 #include "CommonTypes.h"
+#include "Rng.h"
 
 struct NoteIndexIterator {
     using iterator_category = std::forward_iterator_tag;
@@ -45,6 +46,8 @@ public:
 
     [[nodiscard]] virtual int size() const = 0;
 
+    [[nodiscard]] virtual NoteNumber selectRandom(Rng &rng) const = 0;
+
     [[nodiscard]] virtual NoteIndexIterator cbegin() const = 0;
 
     [[nodiscard]] virtual NoteIndexIterator cend() const = 0;
@@ -68,6 +71,8 @@ public:
         return m_back;
     }
 
+    [[nodiscard]] NoteNumber atPosition(int index) const;
+
     [[nodiscard]] int positionOf(NoteNumber noteNumber) const override;
 
     [[nodiscard]] bool contains(NoteNumber noteNumber) const override;
@@ -77,6 +82,8 @@ public:
     [[nodiscard]] int size() const override {
         return m_size;
     }
+
+    [[nodiscard]] NoteNumber selectRandom(Rng &rng) const override;
 
     NoteIndexIterator cbegin() const override;
 
