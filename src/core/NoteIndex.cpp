@@ -121,6 +121,14 @@ NoteNumber NoteIndex::selectRandom(Rng &rng) const {
     }
 }
 
+void NoteIndex::addAllToNoteList(NoteList &dest) const {
+    auto current = m_front;
+    while (isValidNote(current)) {
+        dest.add(current);
+        current = forward[current];
+    }
+}
+
 NoteIndexIterator::reference NoteIndexIterator::operator*() const {
     return const_cast<NoteNumber &>(m_current);
 }

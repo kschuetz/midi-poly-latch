@@ -31,6 +31,9 @@ public:
         return m_entries;
     }
 
+    template<typename C = std::less<>>
+    [[nodiscard]] NoteNumber best(C cmp = C{}) const;
+
     [[nodiscard]] NoteNumber selectRandom(Rng &rng) const;
 
     struct Iterator {

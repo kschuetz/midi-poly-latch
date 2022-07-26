@@ -7,6 +7,7 @@
 #include "Consts.h"
 #include "CommonTypes.h"
 #include "Rng.h"
+#include "NoteList.h"
 
 struct NoteIndexIterator {
     using iterator_category = std::forward_iterator_tag;
@@ -61,6 +62,8 @@ public:
     }
 
     [[nodiscard]] NoteNumber selectRandom(Rng &rng) const;
+
+    void addAllToNoteList(NoteList &dest) const;
 
     NoteIndexIterator cbegin() const;
 
