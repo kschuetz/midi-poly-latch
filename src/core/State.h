@@ -15,17 +15,17 @@ public:
 
     void clear();
 
-    int getPlayingCount();
+    [[nodiscard]] int playingCount() const;
 
-    NoteStatus getStatus(NoteNumber noteNumber);
+    [[nodiscard]] NoteStatus noteStatus(NoteNumber noteNumber) const;
 
-    [[nodiscard]] const NoteState &getNoteState(NoteNumber noteNumber) const;
+    [[nodiscard]] const NoteState &noteState(NoteNumber noteNumber) const;
 
-    [[nodiscard]] const NoteIndex &indexByPitch() const {
-        return m_indexByPitch;
+    [[nodiscard]] const NoteIndex &noteIndex() const {
+        return m_noteIndex;
     }
 
 private:
-    NoteState notes[KEY_COUNT];
-    NoteIndex m_indexByPitch;
+    NoteState m_notes[KEY_COUNT];
+    NoteIndex m_noteIndex;
 };

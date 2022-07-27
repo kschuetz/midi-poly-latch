@@ -14,7 +14,7 @@ NoteNumber selectRandomOuter(const NoteIndex &noteIndex, Rng &rng);
 NoteNumber applySecondaryStrategy(SecondaryStrategy secondaryStrategy, Rng &rng, const NoteList &candidates);
 
 NoteNumber selectNoteToSteal(const Strategy &strategy, const State &state, Rng &rng, NoteNumber userNotePlayed) {
-    const NoteIndex &indexByPitch = state.indexByPitch();
+    const NoteIndex &indexByPitch = state.noteIndex();
     switch (strategy.primary) {
         case PrimaryStrategy::Oldest:
             return selectByAge(strategy, state, rng, std::less());
@@ -46,7 +46,7 @@ NoteNumber breakTiesForAge(const Strategy &strategy, const State &state, Rng &rn
     auto it = index.cbegin();
     auto note = *it;
     while (isValidNote(note)) {
-        if (state.getNoteState(note).startedPlaying == bestTimestamp) {
+        if (state.noteState(note).startedPlaying == bestTimestamp) {
             candidates.add(note);
         }
         note = *(++it);
@@ -56,16 +56,16 @@ NoteNumber breakTiesForAge(const Strategy &strategy, const State &state, Rng &rn
 
 template<typename C>
 NoteNumber selectByAge(const Strategy &strategy, const State &state, Rng &rng, C cmp) {
-    auto &index = state.indexByPitch();
+    auto &index = state.noteIndex();
     auto it = index.cbegin();
     if (it == index.cend()) return NO_NOTE;
     auto current = *it;
-    auto currentTimestamp = state.getNoteState(current).startedPlaying;
+    auto currentTimestamp = state.noteState(current).startedPlaying;
     auto best = current;
     auto bestTimestamp = currentTimestamp;
     auto ties = 0;
     while (++it != index.cend()) {
-        currentTimestamp = state.getNoteState(current).startedPlaying;
+        currentTimestamp = state.noteState(current).startedPlaying;
         auto compareScore = currentTimestamp.compare(bestTimestamp);
         if (compareScore == 0) {
             ties++;
@@ -139,11 +139,12 @@ NoteNumber applySecondaryStrategy(SecondaryStrategy secondaryStrategy, Rng &rng,
     else if (candidates.size() == 1) return candidates.atPosition(0);
     else
         switch (secondaryStrategy) {
-            case SecondaryStrategy::StealRandom:
-                return candidates.selectRandom(rng);
             case SecondaryStrategy::StealLower:
                 return candidates.best(std::less());
             case SecondaryStrategy::StealHigher:
                 return candidates.best(std::greater());
+            case SecondaryStrategy::StealRandom:
+            default:
+                return candidates.selectRandom(rng);
         }
 }

@@ -1,24 +1,18 @@
 #include "State.h"
 
 void State::activateNote(const NoteNumber noteNumber, const Velocity velocity, const Timestamp ts) {
-    if (notes[noteNumber].status == NoteStatus::NotPlaying) {
-        m_indexByPitch.insert(noteNumber);
-//        m_indexByAge.insert(noteNumber,
-//                            [ts, this, noteNumber](NoteNumber other) -> bool {
-//                                auto compared = ts.compare(notes[other].startedPlaying);
-//                                if (compared == 0) return noteNumber < other;
-//                                else return compared < 0;
-//                            });
+    if (m_notes[noteNumber].status == NoteStatus::NotPlaying) {
+        m_noteIndex.insert(noteNumber);
     }
-    auto &noteState = notes[noteNumber];
+    auto &noteState = m_notes[noteNumber];
     noteState.status = NoteStatus::Playing;
     noteState.initialDownVelocity = velocity;
     noteState.startedPlaying = ts;
 }
 
 void State::beginRelease(NoteNumber noteNumber, Velocity velocity, Timestamp ts) {
-    if (notes[noteNumber].status == NoteStatus::Playing) {
-        auto &noteState = notes[noteNumber];
+    if (m_notes[noteNumber].status == NoteStatus::Playing) {
+        auto &noteState = m_notes[noteNumber];
         noteState.status = NoteStatus::Playing;
         noteState.initialDownVelocity = velocity;
         noteState.beganRelease = ts;
@@ -26,25 +20,25 @@ void State::beginRelease(NoteNumber noteNumber, Velocity velocity, Timestamp ts)
 }
 
 void State::deactivateNote(NoteNumber noteNumber) {
-    notes[noteNumber].status = NoteStatus::NotPlaying;
-    m_indexByPitch.remove(noteNumber);
+    m_notes[noteNumber].status = NoteStatus::NotPlaying;
+    m_noteIndex.remove(noteNumber);
 }
 
 void State::clear() {
-    m_indexByPitch.clear();
-    for (auto &note: notes) {
+    m_noteIndex.clear();
+    for (auto &note: m_notes) {
         note.status = NoteStatus::NotPlaying;
     }
 }
 
-int State::getPlayingCount() {
-    return m_indexByPitch.size();
+int State::playingCount() const {
+    return m_noteIndex.size();
 }
 
-NoteStatus State::getStatus(NoteNumber noteNumber) {
-    return notes[noteNumber].status;
+NoteStatus State::noteStatus(NoteNumber noteNumber) const {
+    return m_notes[noteNumber].status;
 }
 
-const NoteState &State::getNoteState(NoteNumber noteNumber) const {
-    return notes[noteNumber];
+const NoteState &State::noteState(NoteNumber noteNumber) const {
+    return m_notes[noteNumber];
 }
