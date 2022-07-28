@@ -46,9 +46,12 @@ public:
         return *this;
     }
 
+    bool operator==(Velocity other) const;
+
     char value;
 };
 
+#define MaxVelocity Velocity(127)
 
 enum class NoteStatus {
     NotPlaying,

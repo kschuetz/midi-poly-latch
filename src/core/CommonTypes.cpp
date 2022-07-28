@@ -26,3 +26,6 @@ int Timestamp::compare(Timestamp other) const {
     else return 0;
 }
 
+bool Velocity::operator==(Velocity other) const {
+    return value == other.value;
+}

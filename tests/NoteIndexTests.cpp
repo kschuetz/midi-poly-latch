@@ -1,5 +1,6 @@
 #include <catch2/catch_all.hpp>
 #include "core/NoteIndex.h"
+#include "support/NoteIndexMatchers.h"
 
 #define NOTE_INDEX_TAG "[NoteIndex]"
 
@@ -73,27 +74,11 @@ TEST_CASE("iterates correctly", NOTE_INDEX_TAG) {
     ni.insert(127);
 
     SECTION("forward") {
-        auto it = ni.cbegin();
-        CHECK(*it == 0);
-        CHECK(*(++it) == 1);
-        CHECK(*(++it) == 2);
-        CHECK(*(++it) == 64);
-        CHECK(*(++it) == 65);
-        CHECK(*(++it) == 96);
-        CHECK(*(++it) == 127);
-        CHECK(++it == ni.cend());
+        CHECK_THAT(ni, IteratesForward({0, 1, 2, 64, 65, 96, 127}));
     }
 
     SECTION("reverse") {
-        auto it = ni.crbegin();
-        CHECK(*it == 127);
-        CHECK(*(++it) == 96);
-        CHECK(*(++it) == 65);
-        CHECK(*(++it) == 64);
-        CHECK(*(++it) == 2);
-        CHECK(*(++it) == 1);
-        CHECK(*(++it) == 0);
-        CHECK(++it == ni.crend());
+        CHECK_THAT(ni, IteratesReverse({127, 96, 65, 64, 2, 1, 0}));
     }
 }
 
@@ -139,25 +124,8 @@ TEST_CASE("removes notes", NOTE_INDEX_TAG) {
         CHECK(ni.front() == 0);
         CHECK(ni.back() == 127);
 
-        auto it1 = ni.cbegin();
-        CHECK(*it1 == 0);
-        CHECK(*(++it1) == 1);
-        CHECK(*(++it1) == 2);
-        CHECK(*(++it1) == 64);
-        CHECK(*(++it1) == 65);
-        CHECK(*(++it1) == 96);
-        CHECK(*(++it1) == 127);
-        CHECK(++it1 == ni.cend());
-
-        auto it2 = ni.crbegin();
-        CHECK(*it2 == 127);
-        CHECK(*(++it2) == 96);
-        CHECK(*(++it2) == 65);
-        CHECK(*(++it2) == 64);
-        CHECK(*(++it2) == 2);
-        CHECK(*(++it2) == 1);
-        CHECK(*(++it2) == 0);
-        CHECK(++it2 == ni.crend());
+        CHECK_THAT(ni, IteratesForward({0, 1, 2, 64, 65, 96, 127}));
+        CHECK_THAT(ni, IteratesReverse({127, 96, 65, 64, 2, 1, 0}));
     }
 
     SECTION("remove existing note from middle") {
@@ -167,23 +135,8 @@ TEST_CASE("removes notes", NOTE_INDEX_TAG) {
         CHECK(ni.front() == 0);
         CHECK(ni.back() == 127);
 
-        auto it1 = ni.cbegin();
-        CHECK(*it1 == 0);
-        CHECK(*(++it1) == 1);
-        CHECK(*(++it1) == 2);
-        CHECK(*(++it1) == 65);
-        CHECK(*(++it1) == 96);
-        CHECK(*(++it1) == 127);
-        CHECK(++it1 == ni.cend());
-
-        auto it2 = ni.crbegin();
-        CHECK(*it2 == 127);
-        CHECK(*(++it2) == 96);
-        CHECK(*(++it2) == 65);
-        CHECK(*(++it2) == 2);
-        CHECK(*(++it2) == 1);
-        CHECK(*(++it2) == 0);
-        CHECK(++it2 == ni.crend());
+        CHECK_THAT(ni, IteratesForward({0, 1, 2, 65, 96, 127}));
+        CHECK_THAT(ni, IteratesReverse({127, 96, 65, 2, 1, 0}));
     }
 
     SECTION("remove existing note from front") {
@@ -193,23 +146,8 @@ TEST_CASE("removes notes", NOTE_INDEX_TAG) {
         CHECK(ni.front() == 1);
         CHECK(ni.back() == 127);
 
-        auto it1 = ni.cbegin();
-        CHECK(*it1 == 1);
-        CHECK(*(++it1) == 2);
-        CHECK(*(++it1) == 64);
-        CHECK(*(++it1) == 65);
-        CHECK(*(++it1) == 96);
-        CHECK(*(++it1) == 127);
-        CHECK(++it1 == ni.cend());
-
-        auto it2 = ni.crbegin();
-        CHECK(*it2 == 127);
-        CHECK(*(++it2) == 96);
-        CHECK(*(++it2) == 65);
-        CHECK(*(++it2) == 64);
-        CHECK(*(++it2) == 2);
-        CHECK(*(++it2) == 1);
-        CHECK(++it2 == ni.crend());
+        CHECK_THAT(ni, IteratesForward({1, 2, 64, 65, 96, 127}));
+        CHECK_THAT(ni, IteratesReverse({127, 96, 65, 64, 2, 1}));
     }
 
     SECTION("remove existing note from back") {
@@ -219,23 +157,8 @@ TEST_CASE("removes notes", NOTE_INDEX_TAG) {
         CHECK(ni.front() == 0);
         CHECK(ni.back() == 96);
 
-        auto it1 = ni.cbegin();
-        CHECK(*it1 == 0);
-        CHECK(*(++it1) == 1);
-        CHECK(*(++it1) == 2);
-        CHECK(*(++it1) == 64);
-        CHECK(*(++it1) == 65);
-        CHECK(*(++it1) == 96);
-        CHECK(++it1 == ni.cend());
-
-        auto it2 = ni.crbegin();
-        CHECK(*it2 == 96);
-        CHECK(*(++it2) == 65);
-        CHECK(*(++it2) == 64);
-        CHECK(*(++it2) == 2);
-        CHECK(*(++it2) == 1);
-        CHECK(*(++it2) == 0);
-        CHECK(++it2 == ni.crend());
+        CHECK_THAT(ni, IteratesForward({0, 1, 2, 64, 65, 96}));
+        CHECK_THAT(ni, IteratesReverse({96, 65, 64, 2, 1, 0}));
     }
 
     SECTION("remove all notes") {
