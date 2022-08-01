@@ -39,7 +39,7 @@ public:
 
 class Velocity final {
 public:
-    explicit Velocity(char value) : value(value & 0x7F) {}
+    explicit Velocity(signed char value) : value(value < 0 ? 0 : value) {}
 
     Velocity &operator=(const Velocity other) {
         value = other.value;
@@ -48,7 +48,7 @@ public:
 
     bool operator==(Velocity other) const;
 
-    char value;
+    signed char value;
 };
 
 #define MaxVelocity Velocity(127)
