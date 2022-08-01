@@ -19,6 +19,26 @@ void Parameters::setStealingStrategy(Stealing::Strategy value) {
     m_stealingStrategy = value;
 }
 
-const SpecialKeys &Parameters::specialKeys() const {
+SpecialKeys Parameters::specialKeys() const {
     return m_specialKeys;
+}
+
+void Parameters::setSpecialKeys(SpecialKeys value) {
+    m_specialKeys = value;
+}
+
+ReleaseTrigger Parameters::releaseTrigger() const {
+    return m_releaseTrigger;
+}
+
+void Parameters::setReleaseTrigger(ReleaseTrigger value) {
+    m_releaseTrigger = value;
+}
+
+ReleaseVelocitySource Parameters::releaseVelocitySource() const {
+    return m_releaseVelocitySource;
+}
+
+void Parameters::setReleaseVelocitySource(ReleaseVelocitySource value) {
+    m_releaseVelocitySource = value;
 }

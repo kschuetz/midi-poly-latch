@@ -17,7 +17,6 @@ constexpr Stealing::Strategy defaultStealingStrategy = Stealing::Strategy{Steali
 
 class Parameters {
 public:
-
     [[nodiscard]] int maxVoices() const;
 
     void setMaxVoices(int value);
@@ -26,13 +25,22 @@ public:
 
     void setStealingStrategy(Stealing::Strategy value);
 
-    [[nodiscard]] const SpecialKeys &specialKeys() const;
+    [[nodiscard]] SpecialKeys specialKeys() const;
 
+    void setSpecialKeys(SpecialKeys value);
+
+    [[nodiscard]] ReleaseTrigger releaseTrigger() const;
+
+    void setReleaseTrigger(ReleaseTrigger value);
+
+    [[nodiscard]] ReleaseVelocitySource releaseVelocitySource() const;
+
+    void setReleaseVelocitySource(ReleaseVelocitySource value);
 
 private:
     int m_maxVoices = defaultMaxVoices;
     Stealing::Strategy m_stealingStrategy = defaultStealingStrategy;
     SpecialKeys m_specialKeys{};
-    ReleaseTrigger m_turnOffTrigger{};
+    ReleaseTrigger m_releaseTrigger{};
     ReleaseVelocitySource m_releaseVelocitySource{};
 };
