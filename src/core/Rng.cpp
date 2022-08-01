@@ -1,5 +1,8 @@
 #include "Rng.h"
 
-int Rng::generate(int maxExclusive) {
-    return 0;
+unsigned int Rng::generate(unsigned int maxExclusive) {
+    if (maxExclusive <= 1) return 0;
+    else {
+        return m_rng() % maxExclusive;
+    }
 }

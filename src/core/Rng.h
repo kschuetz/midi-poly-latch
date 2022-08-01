@@ -5,7 +5,7 @@
 
 class Rng {
 public:
-    int generate(int maxExclusive);
+    unsigned int generate(unsigned int maxExclusive);
 
     Rng() : m_rng(std::chrono::system_clock::now().time_since_epoch().count()) {}
 
