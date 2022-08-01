@@ -172,7 +172,7 @@ TEST_CASE("deactivateNote", STATE_TAG) {
 
 }
 
-TEST_CASE("clear", STATE_TAG) {
+TEST_CASE("clear State", STATE_TAG) {
     State state;
 
     state.activateNote(0, MaxVelocity, Timestamp(1));

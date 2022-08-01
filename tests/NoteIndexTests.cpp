@@ -218,7 +218,7 @@ TEST_CASE("insert every possible note", NOTE_INDEX_TAG) {
     CHECK(ni.back() == 127);
 }
 
-TEST_CASE("clear", NOTE_INDEX_TAG) {
+TEST_CASE("clear NoteIndex", NOTE_INDEX_TAG) {
     NoteIndex ni;
     for (NoteNumber n = 0; isValidNote(n); n++) {
         ni.insert(n);

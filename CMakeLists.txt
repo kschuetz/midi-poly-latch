@@ -43,6 +43,7 @@ set(SourceFiles
         src/core/NoteState.h
         src/core/NoteList.h
         src/core/Rng.h
+        src/core/SpecialKeys.h
         src/core/State.h
         src/core/Stealing.h
         src/PluginEditor.cpp
