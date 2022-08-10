@@ -15,6 +15,10 @@ public:
 
     void clear();
 
+    [[nodiscard]] bool overrideMode() const;
+
+    void setOverrideMode(bool value);
+
     [[nodiscard]] int playingCount() const;
 
     [[nodiscard]] NoteStatus noteStatus(NoteNumber noteNumber) const;
@@ -28,4 +32,5 @@ public:
 private:
     NoteState m_notes[KEY_COUNT];
     NoteIndex m_noteIndex;
+    bool m_overrideMode;
 };

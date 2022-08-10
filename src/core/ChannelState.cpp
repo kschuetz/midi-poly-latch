@@ -42,3 +42,11 @@ NoteStatus ChannelState::noteStatus(NoteNumber noteNumber) const {
 const NoteState &ChannelState::noteState(NoteNumber noteNumber) const {
     return m_notes[noteNumber];
 }
+
+bool ChannelState::overrideMode() const {
+    return m_overrideMode;
+}
+
+void ChannelState::setOverrideMode(bool value) {
+    m_overrideMode = value;
+}
