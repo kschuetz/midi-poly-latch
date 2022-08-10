@@ -106,7 +106,7 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported(const BusesLayout &layout
 
 void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
                                              juce::MidiBuffer &midiMessages) {
-    juce::ignoreUnused(midiMessages);
+    m_engine.process(midiMessages);
 
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();

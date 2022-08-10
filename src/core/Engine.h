@@ -5,6 +5,7 @@
 #include "Parameters.h"
 
 class Engine final {
+public:
     void process(juce::MidiBuffer &midiBuffer);
 
     void triggerAllNotesOffNextFrame();
