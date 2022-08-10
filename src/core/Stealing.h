@@ -5,7 +5,7 @@
 
 #include "Consts.h"
 #include "NoteState.h"
-#include "State.h"
+#include "ChannelState.h"
 #include "NoteList.h"
 #include "Rng.h"
 
@@ -35,6 +35,7 @@ namespace Stealing {
         SecondaryStrategy secondary;
     };
 
-    NoteNumber selectNoteToSteal(const Strategy &strategy, const State &state, Rng &rng, NoteNumber userNotePlayed);
+    NoteNumber
+    selectNoteToSteal(const Strategy &strategy, const ChannelState &state, Rng &rng, NoteNumber userNotePlayed);
 
 }

@@ -38,23 +38,25 @@ set(SourceFiles
         src/PluginProcessor.h
         src/core/CommonTypes.h
         src/core/Consts.h
+        src/core/Engine.h
         src/core/Parameters.h
         src/core/NoteIndex.h
         src/core/NoteState.h
         src/core/NoteList.h
         src/core/Rng.h
         src/core/SpecialKeys.h
-        src/core/State.h
+        src/core/ChannelState.h
         src/core/Stealing.h
         src/PluginEditor.cpp
         src/PluginProcessor.cpp
         src/core/CommonTypes.cpp
-        src/core/Parameters.cpp
+        src/core/Engine.cpp
         src/core/NoteIndex.cpp
         src/core/NoteState.cpp
         src/core/NoteList.cpp
+        src/core/Parameters.cpp
         src/core/Rng.cpp
-        src/core/State.cpp
+        src/core/ChannelState.cpp
         src/core/Stealing.cpp
         )
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})

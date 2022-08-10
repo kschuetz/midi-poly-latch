@@ -3,7 +3,7 @@
 using namespace Stealing;
 
 template<typename C = std::less<>>
-NoteNumber selectByAge(const Strategy &strategy, const State &state, Rng &rng, C cmp = C{});
+NoteNumber selectByAge(const Strategy &strategy, const ChannelState &state, Rng &rng, C cmp = C{});
 
 NoteNumber selectMostCentral(SecondaryStrategy secondaryStrategy, const NoteIndex &noteIndex, Rng &rng);
 
@@ -13,7 +13,7 @@ NoteNumber selectRandomOuter(const NoteIndex &noteIndex, Rng &rng);
 
 NoteNumber applySecondaryStrategy(SecondaryStrategy secondaryStrategy, Rng &rng, const NoteList &candidates);
 
-NoteNumber selectNoteToSteal(const Strategy &strategy, const State &state, Rng &rng, NoteNumber userNotePlayed) {
+NoteNumber selectNoteToSteal(const Strategy &strategy, const ChannelState &state, Rng &rng, NoteNumber userNotePlayed) {
     const NoteIndex &indexByPitch = state.noteIndex();
     switch (strategy.primary) {
         case PrimaryStrategy::Oldest:
@@ -40,7 +40,7 @@ NoteNumber selectNoteToSteal(const Strategy &strategy, const State &state, Rng &
     return NO_NOTE;
 }
 
-NoteNumber breakTiesForAge(const Strategy &strategy, const State &state, Rng &rng, const NoteIndex &index,
+NoteNumber breakTiesForAge(const Strategy &strategy, const ChannelState &state, Rng &rng, const NoteIndex &index,
                            const Timestamp &bestTimestamp) {
     NoteList candidates;
     auto it = index.cbegin();
@@ -55,7 +55,7 @@ NoteNumber breakTiesForAge(const Strategy &strategy, const State &state, Rng &rn
 }
 
 template<typename C>
-NoteNumber selectByAge(const Strategy &strategy, const State &state, Rng &rng, C cmp) {
+NoteNumber selectByAge(const Strategy &strategy, const ChannelState &state, Rng &rng, C cmp) {
     auto &index = state.noteIndex();
     auto it = index.cbegin();
     if (it == index.cend()) return NO_NOTE;

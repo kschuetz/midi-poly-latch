@@ -1,11 +1,11 @@
 #include <catch2/catch_all.hpp>
-#include "core/State.h"
+#include "core/ChannelState.h"
 #include "support/NoteIndexMatchers.h"
 
-#define STATE_TAG "[State]"
+#define CHANNEL_STATE_TAG "[ChannelState]"
 
-TEST_CASE("default State", STATE_TAG) {
-    State state;
+TEST_CASE("default ChannelState", CHANNEL_STATE_TAG) {
+    ChannelState state;
 
     CHECK(state.playingCount() == 0);
     for (NoteNumber n = 0; isValidNote(n); n++) {
@@ -15,8 +15,8 @@ TEST_CASE("default State", STATE_TAG) {
     CHECK(state.noteIndex().crbegin() == state.noteIndex().crend());
 }
 
-TEST_CASE("activateNote", STATE_TAG) {
-    State state;
+TEST_CASE("activateNote", CHANNEL_STATE_TAG) {
+    ChannelState state;
 
     SECTION("one note") {
         state.activateNote(64, MaxVelocity, Timestamp(1));
@@ -92,8 +92,8 @@ TEST_CASE("activateNote", STATE_TAG) {
     }
 }
 
-TEST_CASE("deactivateNote", STATE_TAG) {
-    State state;
+TEST_CASE("deactivateNote", CHANNEL_STATE_TAG) {
+    ChannelState state;
 
     state.activateNote(0, MaxVelocity, Timestamp(1));
     state.activateNote(1, MaxVelocity, Timestamp(1));
@@ -172,8 +172,8 @@ TEST_CASE("deactivateNote", STATE_TAG) {
 
 }
 
-TEST_CASE("clear State", STATE_TAG) {
-    State state;
+TEST_CASE("clear ChannelState", CHANNEL_STATE_TAG) {
+    ChannelState state;
 
     state.activateNote(0, MaxVelocity, Timestamp(1));
     state.activateNote(1, MaxVelocity, Timestamp(1));

@@ -5,7 +5,7 @@
 #include "NoteList.h"
 #include "NoteIndex.h"
 
-class State final {
+class ChannelState final {
 public:
     void activateNote(NoteNumber noteNumber, Velocity velocity, Timestamp ts);
 
