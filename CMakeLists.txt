@@ -43,6 +43,7 @@ set(SourceFiles
         src/core/NoteIndex.h
         src/core/NoteState.h
         src/core/NoteList.h
+        src/core/OmniActions.h
         src/core/Rng.h
         src/core/SpecialKeys.h
         src/core/ChannelState.h
@@ -54,6 +55,7 @@ set(SourceFiles
         src/core/NoteIndex.cpp
         src/core/NoteState.cpp
         src/core/NoteList.cpp
+        src/core/OmniActions.cpp
         src/core/Parameters.cpp
         src/core/Rng.cpp
         src/core/ChannelState.cpp
