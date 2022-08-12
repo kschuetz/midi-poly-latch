@@ -19,9 +19,17 @@ public:
 
     [[nodiscard]] bool isBufferWriteNeeded() const;
 
+    [[nodiscard]] const NoteList &notesToTurnOn() const;
+
+    [[nodiscard]] const NoteList &notesToTurnOff() const;
+
+    [[nodiscard]] bool wasAllNotesOffTriggered() const;
+
+    [[nodiscard]] bool wasOneNoteOffTriggered() const;
+
 private:
-    NoteList m_noteOn;
-    NoteList m_noteOff;
+    NoteList m_notesOn;
+    NoteList m_notesOff;
     bool m_allNotesOff;
     bool m_oneNoteOff;
 };

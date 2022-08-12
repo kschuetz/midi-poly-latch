@@ -61,6 +61,10 @@ public:
         return m_size;
     }
 
+    [[nodiscard]] bool isEmpty() const {
+        return m_size == 0;
+    }
+
     [[nodiscard]] NoteNumber selectRandom(Rng &rng) const;
 
     void addAllToNoteList(NoteList &dest) const;

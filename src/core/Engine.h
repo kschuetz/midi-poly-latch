@@ -21,13 +21,17 @@ private:
     OmniActions m_omniActions;
     Timestamp m_lastEventTime{0};
 
-    bool isBufferWriteNeeded(juce::MidiBuffer &midiBuffer);
+    [[nodiscard]] bool isActionNeededThisFrame(const juce::MidiBuffer &midiBuffer) const;
 
-    bool doesAnyChannelHaveTooManyNotes(juce::MidiBuffer &midiBuffer);
+    [[nodiscard]] static bool doesBufferContainNoteMessages(const juce::MidiBuffer &midiBuffer);
 
-    bool doesAnyNoteNeedToBeTurnedOff(juce::MidiBuffer &midiBuffer);
+    [[nodiscard]] bool doesAnyChannelHaveTooManyNotes(const juce::MidiBuffer &midiBuffer) const;
 
-    void processReadOnly(juce::MidiBuffer &midiBuffer);
+    void handleOmniActions(juce::MidiBuffer &output);
 
-    void processWrite(juce::MidiBuffer &midiBuffer);
+    void sendAllNotesOff(juce::MidiBuffer &output, int samplePosition);
+
+    void sendAllNotesOff(juce::MidiBuffer &output, int samplePosition, int channelIndex);
+
+    void sendOneNoteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex);
 };

@@ -31,6 +31,10 @@ void ChannelState::clear() {
     }
 }
 
+bool ChannelState::hasActiveNotes() const {
+    return !m_noteIndex.isEmpty();
+}
+
 int ChannelState::playingCount() const {
     return m_noteIndex.size();
 }
