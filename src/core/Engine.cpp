@@ -6,7 +6,7 @@ void Engine::process(juce::MidiBuffer &midiBuffer) {
     auto &output = m_processedBuffer;
     output.clear();
 
-    Timestamp currentTimestamp = m_lastEventTime;
+    TimePosition currentTimestamp = m_lastEventTime;
     int sampleNumberOfCurrentTimestamp = 0;
 
     handleOmniActions(output);
@@ -33,7 +33,7 @@ void Engine::handleOmniActions(juce::MidiBuffer &output) {
                 sendOneNoteOff(output, 0, channelIdx);
             }
         }
-        // TODO: list off here
+        // TODO: left off here
     }
 }
 
@@ -61,6 +61,7 @@ void Engine::sendAllNotesOff(juce::MidiBuffer &output, int samplePosition, int c
 void Engine::sendOneNoteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex) {
 
 }
+
 
 /*
  * NoteNumber breakTiesForAge(const Strategy &strategy, const ChannelState &state, Rng &rng, const NoteIndex &index,

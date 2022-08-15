@@ -41,7 +41,7 @@ NoteNumber selectNoteToSteal(const Strategy &strategy, const ChannelState &state
 }
 
 NoteNumber breakTiesForAge(const Strategy &strategy, const ChannelState &state, Rng &rng, const NoteIndex &index,
-                           const Timestamp &bestTimestamp) {
+                           const TimePosition &bestTimestamp) {
     NoteList candidates;
     auto it = index.cbegin();
     auto note = *it;

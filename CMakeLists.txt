@@ -36,6 +36,7 @@ target_compile_features("${PROJECT_NAME}" PRIVATE cxx_std_20)
 set(SourceFiles
         src/PluginEditor.h
         src/PluginProcessor.h
+        src/core/ChannelState.h
         src/core/CommonTypes.h
         src/core/Consts.h
         src/core/Engine.h
@@ -46,10 +47,11 @@ set(SourceFiles
         src/core/OmniActions.h
         src/core/Rng.h
         src/core/SpecialKeys.h
-        src/core/ChannelState.h
         src/core/Stealing.h
+        src/core/TimePosition.h
         src/PluginEditor.cpp
         src/PluginProcessor.cpp
+        src/core/ChannelState.cpp
         src/core/CommonTypes.cpp
         src/core/Engine.cpp
         src/core/NoteIndex.cpp
@@ -58,8 +60,8 @@ set(SourceFiles
         src/core/OmniActions.cpp
         src/core/Parameters.cpp
         src/core/Rng.cpp
-        src/core/ChannelState.cpp
         src/core/Stealing.cpp
+        src/core/TimePosition.cpp
         )
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})
 

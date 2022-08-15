@@ -1,6 +1,6 @@
 #include "ChannelState.h"
 
-void ChannelState::activateNote(const NoteNumber noteNumber, const Velocity velocity, const Timestamp ts) {
+void ChannelState::activateNote(const NoteNumber noteNumber, const Velocity velocity, const TimePosition ts) {
     if (m_notes[noteNumber].status == NoteStatus::NotPlaying) {
         m_noteIndex.insert(noteNumber);
     }
@@ -10,7 +10,7 @@ void ChannelState::activateNote(const NoteNumber noteNumber, const Velocity velo
     noteState.startedPlaying = ts;
 }
 
-void ChannelState::beginRelease(NoteNumber noteNumber, Velocity velocity, Timestamp ts) {
+void ChannelState::beginRelease(NoteNumber noteNumber, Velocity velocity, TimePosition ts) {
     if (m_notes[noteNumber].status == NoteStatus::Playing) {
         auto &noteState = m_notes[noteNumber];
         noteState.status = NoteStatus::Playing;

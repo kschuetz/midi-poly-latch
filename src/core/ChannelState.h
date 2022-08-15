@@ -7,11 +7,11 @@
 
 class ChannelState final {
 public:
-    void activateNote(NoteNumber noteNumber, Velocity velocity, Timestamp ts);
+    void activateNote(NoteNumber noteNumber, Velocity velocity, TimePosition ts);
 
     void deactivateNote(NoteNumber noteNumber);
 
-    void beginRelease(NoteNumber noteNumber, Velocity velocity, Timestamp ts);
+    void beginRelease(NoteNumber noteNumber, Velocity velocity, TimePosition ts);
 
     void clear();
 

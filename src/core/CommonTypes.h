@@ -13,30 +13,6 @@ inline bool isValidNote(NoteNumber noteNumber) {
     return noteNumber >= 0;
 }
 
-class Timestamp final {
-public:
-    explicit Timestamp(const unsigned int value) : value(value) {}
-
-    Timestamp &operator=(const Timestamp other) {
-        value = other.value;
-        return *this;
-    }
-
-    [[nodiscard]] int compare(Timestamp other) const;
-
-    bool operator==(Timestamp other) const;
-
-    bool operator<(Timestamp other) const;
-
-    bool operator<=(Timestamp other) const;
-
-    bool operator>(Timestamp other) const;
-
-    bool operator>=(Timestamp other) const;
-
-    unsigned int value;
-};
-
 class Velocity final {
 public:
     explicit Velocity(signed char value) : value(value < 0 ? 0 : value) {}
