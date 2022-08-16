@@ -19,7 +19,7 @@ private:
     Rng m_rng;
     juce::MidiBuffer m_processedBuffer;
     OmniActions m_omniActions;
-    TimePosition m_lastEventTime{0};
+    TimePositionTracker m_timePosition;
 
     [[nodiscard]] bool isActionNeededThisFrame(const juce::MidiBuffer &midiBuffer) const;
 

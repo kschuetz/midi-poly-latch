@@ -11,6 +11,8 @@ public:
 
     [[nodiscard]] int compare(TimePosition other) const;
 
+    [[nodiscard]] TimePosition next() const;
+
     bool operator==(TimePosition other) const;
 
     bool operator<(TimePosition other) const;
@@ -22,4 +24,17 @@ public:
     bool operator>=(TimePosition other) const;
 
     unsigned int value;
+};
+
+class TimePositionTracker final {
+public:
+    TimePositionTracker() : m_current(TimePosition(0)), m_lastSample(-1) {};
+
+    TimePosition update(int sampleNumber);
+
+    void newFrame();
+
+private:
+    TimePosition m_current;
+    int m_lastSample;
 };

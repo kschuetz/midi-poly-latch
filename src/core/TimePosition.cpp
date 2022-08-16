@@ -27,3 +27,20 @@ int TimePosition::compare(TimePosition other) const {
     else return 0;
 }
 
+TimePosition TimePosition::next() const {
+    return TimePosition(value + 1);
+}
+
+TimePosition TimePositionTracker::update(int sampleNumber) {
+    if (m_lastSample < 0) {
+        m_lastSample = sampleNumber;
+    } else if (sampleNumber > m_lastSample) {
+        m_lastSample = sampleNumber;
+        m_current = m_current.next();
+    }
+    return m_current;
+}
+
+void TimePositionTracker::newFrame() {
+    m_lastSample = -1;
+}

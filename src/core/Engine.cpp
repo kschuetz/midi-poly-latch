@@ -6,8 +6,7 @@ void Engine::process(juce::MidiBuffer &midiBuffer) {
     auto &output = m_processedBuffer;
     output.clear();
 
-    TimePosition currentTimestamp = m_lastEventTime;
-    int sampleNumberOfCurrentTimestamp = 0;
+    m_timePosition.newFrame();
 
     handleOmniActions(output);
 
@@ -61,23 +60,6 @@ void Engine::sendAllNotesOff(juce::MidiBuffer &output, int samplePosition, int c
 void Engine::sendOneNoteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex) {
 
 }
-
-
-/*
- * NoteNumber breakTiesForAge(const Strategy &strategy, const ChannelState &state, Rng &rng, const NoteIndex &index,
-                           const Timestamp &bestTimestamp) {
-    NoteList candidates;
-    auto it = index.cbegin();
-    auto note = *it;
-    while (isValidNote(note)) {
-        if (state.noteState(note).startedPlaying == bestTimestamp) {
-            candidates.add(note);
-        }
-        note = *(++it);
-    }
-    return applySecondaryStrategy(strategy.secondary, rng, candidates);
-}
- */
 
 bool Engine::isActionNeededThisFrame(const juce::MidiBuffer &midiBuffer) const {
     return (m_omniActions.isBufferWriteNeeded() ||
