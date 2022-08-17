@@ -9,6 +9,31 @@
 
 using NoteListEntries = NoteNumber[KEY_COUNT];
 
+struct NoteListIterator {
+    using iterator_category = std::forward_iterator_tag;
+    using difference_type = std::ptrdiff_t;
+    using value_type = NoteNumber;
+    using pointer = NoteNumber *;
+    using reference = NoteNumber &;
+
+    NoteListIterator(pointer ptr) : m_ptr(ptr) {}
+
+    reference operator*() const;
+
+    pointer operator->();
+
+    NoteListIterator &operator++();
+
+    const NoteListIterator operator++(int);
+
+    friend bool operator==(const NoteListIterator &a, const NoteListIterator &b);
+
+    friend bool operator!=(const NoteListIterator &a, const NoteListIterator &b);
+
+private:
+    pointer m_ptr;
+};
+
 /**
  * List of notes stored in an array. Unordered, with a maximum size of KEY_COUNT.
  * Duplicates are not removed.
@@ -27,6 +52,10 @@ public:
         return m_size;
     }
 
+    [[nodiscard]] bool isEmpty() const {
+        return m_size <= 0;
+    }
+
     [[nodiscard]] NoteListEntries &entries() {
         return m_entries;
     }
@@ -36,34 +65,34 @@ public:
 
     [[nodiscard]] NoteNumber selectRandom(Rng &rng) const;
 
-    struct Iterator {
-        using iterator_category = std::forward_iterator_tag;
-        using difference_type = std::ptrdiff_t;
-        using value_type = NoteNumber;
-        using pointer = NoteNumber *;
-        using reference = NoteNumber &;
+//    struct Iterator {
+//        using iterator_category = std::forward_iterator_tag;
+//        using difference_type = std::ptrdiff_t;
+//        using value_type = NoteNumber;
+//        using pointer = NoteNumber *;
+//        using reference = NoteNumber &;
+//
+//        Iterator(pointer ptr) : m_ptr(ptr) {}
+//
+//        reference operator*() const;
+//
+//        pointer operator->();
+//
+//        Iterator &operator++();
+//
+//        const Iterator operator++(int);
+//
+//        friend bool operator==(const Iterator &a, const Iterator &b);
+//
+//        friend bool operator!=(const Iterator &a, const Iterator &b);
+//
+//    private:
+//        pointer m_ptr;
+//    };
 
-        Iterator(pointer ptr) : m_ptr(ptr) {}
+    NoteListIterator cbegin();
 
-        reference operator*() const;
-
-        pointer operator->();
-
-        Iterator &operator++();
-
-        const Iterator operator++(int);
-
-        friend bool operator==(const Iterator &a, const Iterator &b);
-
-        friend bool operator!=(const Iterator &a, const Iterator &b);
-
-    private:
-        pointer m_ptr;
-    };
-
-    Iterator begin();
-
-    Iterator end();
+    NoteListIterator cend();
 
 private:
     int m_size = 0;
