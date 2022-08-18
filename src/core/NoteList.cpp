@@ -10,11 +10,11 @@ void NoteList::clear() {
     m_size = 0;
 }
 
-NoteListIterator NoteList::cbegin() {
+NoteListIterator NoteList::cbegin() const {
     return {&m_entries[0]};
 }
 
-NoteListIterator NoteList::cend() {
+NoteListIterator NoteList::cend() const {
     return {&m_entries[m_size]};
 }
 
@@ -53,7 +53,7 @@ NoteNumber NoteList::best(C cmp) const {
     }
 }
 
-NoteNumber &NoteListIterator::operator*() const {
+NoteNumber NoteListIterator::operator*() const {
     return *m_ptr;
 }
 

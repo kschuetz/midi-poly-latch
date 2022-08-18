@@ -18,8 +18,8 @@ TEST_CASE("constructing Velocity", VELOCITY_TAG) {
     CHECK(Velocity(0) == Velocity(0));
     CHECK(Velocity(1) == Velocity(1));
     CHECK(Velocity(127) == Velocity(127));
-    CHECK(Velocity(127) == Velocity(127));
-    CHECK(Velocity(-1) == Velocity(0));
+    CHECK(Velocity(-1) == Velocity(127));
+    CHECK(Velocity(-2) == Velocity(126));
     CHECK(Velocity(128) == Velocity(0));
     CHECK(Velocity(-128) == Velocity(0));
 }

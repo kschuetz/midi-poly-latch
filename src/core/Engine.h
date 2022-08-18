@@ -34,4 +34,14 @@ private:
     void sendAllNotesOff(juce::MidiBuffer &output, int samplePosition, int channelIndex);
 
     void sendOneNoteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex);
+
+    [[nodiscard]] bool isNotePlayingOnAnyChannel(NoteNumber noteNumber) const;
+
+    void handleOmniToggledNote(juce::MidiBuffer &output, NoteNumber note);
+
+    void omniNoteOff(juce::MidiBuffer &output, NoteNumber note);
+
+    void noteOn(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity);
+
+    void noteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity);
 };

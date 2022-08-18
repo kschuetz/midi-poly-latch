@@ -15,16 +15,21 @@ inline bool isValidNote(NoteNumber noteNumber) {
 
 class Velocity final {
 public:
-    explicit Velocity(signed char value) : value(value < 0 ? 0 : value) {}
+    explicit Velocity(unsigned char value) : m_value(value & 127) {}
 
     Velocity &operator=(const Velocity other) {
-        value = other.value;
+        m_value = other.m_value;
         return *this;
     }
 
     bool operator==(Velocity other) const;
 
-    signed char value;
+    [[nodiscard]] unsigned char value() const {
+        return m_value;
+    }
+
+private:
+    unsigned char m_value;
 };
 
 #define MaxVelocity Velocity(127)

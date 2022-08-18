@@ -32,7 +32,10 @@ void Engine::handleOmniActions(juce::MidiBuffer &output) {
                 sendOneNoteOff(output, 0, channelIdx);
             }
         }
-        // TODO: left off here
+        const NoteList &toggledNotes = m_omniActions.toggledNotes();
+        for (auto it = toggledNotes.cbegin(); it != toggledNotes.cend(); ++it) {
+            handleOmniToggledNote(output, *it);
+        }
     }
 }
 
@@ -49,8 +52,7 @@ void Engine::sendAllNotesOff(juce::MidiBuffer &output, int samplePosition, int c
         auto note = *it;
         while (isValidNote(note)) {
             // TODO: release velocity?
-            auto message = juce::MidiMessage::noteOff(channelIndex + 1, note, 1.0f);
-            output.addEvent(message, samplePosition);
+            noteOff(output, samplePosition, channelIndex, note, MaxVelocity);
             note = *(++it);
         }
     }
@@ -91,6 +93,42 @@ void Engine::triggerAllNotesOffNextFrame() {
 
 void Engine::triggerOneNoteOffNextFrame() {
     m_omniActions.triggerOneNoteOff();
+}
+
+void Engine::handleOmniToggledNote(juce::MidiBuffer &output, NoteNumber note) {
+    if (isNotePlayingOnAnyChannel(note)) {
+        omniNoteOff(output, note);
+    } else {
+        noteOn(output, 0, 0, note, MaxVelocity);
+    }
+}
+
+void Engine::omniNoteOff(juce::MidiBuffer &output, NoteNumber note) {
+
+}
+
+void
+Engine::noteOn(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity) {
+    auto t = m_timePosition.update(samplePosition);
+    m_channels[channelIndex].activateNote(note, velocity, t);
+    auto message = juce::MidiMessage::noteOn(channelIndex + 1, note, velocity.value());
+    output.addEvent(message, samplePosition);
+}
+
+void
+Engine::noteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity) {
+    m_channels[channelIndex].deactivateNote(note);
+    auto message = juce::MidiMessage::noteOff(channelIndex + 1, note, velocity.value());
+    output.addEvent(message, samplePosition);
+}
+
+bool Engine::isNotePlayingOnAnyChannel(NoteNumber noteNumber) const {
+    for (const auto &m_channel: m_channels) {
+        if (m_channel.noteState(noteNumber).isPlaying()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**

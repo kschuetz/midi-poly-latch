@@ -10,4 +10,6 @@ struct NoteState {
     Velocity initialDownVelocity = Velocity(0);
     Velocity initialUpVelocity = Velocity(0);
     Velocity releaseVelocity = Velocity(0);
+
+    [[nodiscard]] bool isPlaying() const;
 };

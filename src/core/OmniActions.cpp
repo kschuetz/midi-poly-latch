@@ -2,18 +2,13 @@
 #include "OmniActions.h"
 
 void OmniActions::reset() {
-    m_notesOff.clear();
-    m_notesOn.clear();
+    m_toggledNotes.clear();
     m_allNotesOff = false;
     m_oneNoteOff = false;
 }
 
-void OmniActions::triggerNoteOn(NoteNumber note) {
-    m_notesOn.add(note);
-}
-
-void OmniActions::triggerNoteOff(NoteNumber note) {
-    m_notesOff.add(note);
+void OmniActions::triggerToggleNote(NoteNumber note) {
+    m_toggledNotes.add(note);
 }
 
 void OmniActions::triggerAllNotesOff() {
@@ -25,15 +20,11 @@ void OmniActions::triggerOneNoteOff() {
 }
 
 bool OmniActions::isBufferWriteNeeded() const {
-    return m_allNotesOff || m_oneNoteOff;
+    return m_allNotesOff || m_oneNoteOff || !m_toggledNotes.isEmpty();
 }
 
-const NoteList &OmniActions::notesToTurnOn() const {
-    return m_notesOn;
-}
-
-const NoteList &OmniActions::notesToTurnOff() const {
-    return m_notesOff;
+const NoteList &OmniActions::toggledNotes() const {
+    return m_toggledNotes;
 }
 
 bool OmniActions::wasOneNoteOffTriggered() const {

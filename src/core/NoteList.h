@@ -13,12 +13,12 @@ struct NoteListIterator {
     using iterator_category = std::forward_iterator_tag;
     using difference_type = std::ptrdiff_t;
     using value_type = NoteNumber;
-    using pointer = NoteNumber *;
+    using pointer = const NoteNumber *;
     using reference = NoteNumber &;
 
     NoteListIterator(pointer ptr) : m_ptr(ptr) {}
 
-    reference operator*() const;
+    NoteNumber operator*() const;
 
     pointer operator->();
 
@@ -90,9 +90,9 @@ public:
 //        pointer m_ptr;
 //    };
 
-    NoteListIterator cbegin();
+    [[nodiscard]] NoteListIterator cbegin() const;
 
-    NoteListIterator cend();
+    [[nodiscard]] NoteListIterator cend() const;
 
 private:
     int m_size = 0;
