@@ -35,7 +35,7 @@ namespace Stealing {
         SecondaryStrategy secondary;
     };
 
-    NoteNumber
-    selectNoteToSteal(const Strategy &strategy, const ChannelState &state, Rng &rng, NoteNumber userNotePlayed);
-
 }
+
+NoteNumber
+selectNoteToSteal(const Stealing::Strategy &strategy, const ChannelState &state, Rng &rng, NoteNumber userNotePlayed);

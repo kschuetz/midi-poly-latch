@@ -1,6 +1,8 @@
 #include "Stealing.h"
 
-using namespace Stealing;
+using Stealing::Strategy;
+using Stealing::PrimaryStrategy;
+using Stealing::SecondaryStrategy;
 
 template<typename C = std::less<>>
 NoteNumber selectByAge(const Strategy &strategy, const ChannelState &state, Rng &rng, C cmp = C{});
@@ -13,7 +15,8 @@ NoteNumber selectRandomOuter(const NoteIndex &noteIndex, Rng &rng);
 
 NoteNumber applySecondaryStrategy(SecondaryStrategy secondaryStrategy, Rng &rng, const NoteList &candidates);
 
-NoteNumber selectNoteToSteal(const Strategy &strategy, const ChannelState &state, Rng &rng, NoteNumber userNotePlayed) {
+NoteNumber
+selectNoteToSteal(const Strategy &strategy, const ChannelState &state, Rng &rng, NoteNumber userNotePlayed) {
     const NoteIndex &indexByPitch = state.noteIndex();
     switch (strategy.primary) {
         case PrimaryStrategy::Oldest:

@@ -40,19 +40,6 @@ NoteNumber NoteList::selectRandom(Rng &rng) const {
     }
 }
 
-template<typename C>
-NoteNumber NoteList::best(C cmp) const {
-    if (m_size < 1) return NO_NOTE;
-    else {
-        auto best = m_entries[0];
-        for (int i = 1; i < m_size; i++) {
-            auto entry = m_entries[i];
-            if (cmp(entry, best)) best = entry;
-        }
-        return best;
-    }
-}
-
 NoteNumber NoteListIterator::operator*() const {
     return *m_ptr;
 }

@@ -41,7 +41,13 @@ private:
 
     void omniNoteOff(juce::MidiBuffer &output, NoteNumber note);
 
-    void noteOn(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity);
+    void
+    writeNoteOn(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity);
 
-    void noteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity);
+    void
+    writeNoteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity);
+
+    void handleNoteOn(juce::MidiBuffer &output, const juce::MidiMessage &message, int samplePosition);
+
+    void handleNoteOff(juce::MidiBuffer &output, const juce::MidiMessage &message, int samplePosition);
 };

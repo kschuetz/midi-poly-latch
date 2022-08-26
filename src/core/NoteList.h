@@ -61,7 +61,17 @@ public:
     }
 
     template<typename C = std::less<>>
-    [[nodiscard]] NoteNumber best(C cmp = C{}) const;
+    [[nodiscard]] NoteNumber best(C cmp = C{}) const {
+        if (m_size < 1) return NO_NOTE;
+        else {
+            auto best = m_entries[0];
+            for (int i = 1; i < m_size; i++) {
+                auto entry = m_entries[i];
+                if (cmp(entry, best)) best = entry;
+            }
+            return best;
+        }
+    }
 
     [[nodiscard]] NoteNumber selectRandom(Rng &rng) const;
 

@@ -1,5 +1,6 @@
 
 #include "Engine.h"
+#include "Stealing.h"
 
 void Engine::process(juce::MidiBuffer &midiBuffer) {
     if (!isActionNeededThisFrame(midiBuffer)) return;
@@ -10,15 +11,17 @@ void Engine::process(juce::MidiBuffer &midiBuffer) {
 
     handleOmniActions(output);
 
-//    for (auto iter: midiBuffer) {
-//        const juce::MidiMessage &message = iter.getMessage();
-//        int samplePosition = iter.samplePosition
-//        if (message.isNoteOn(true)) {
-//            auto note = static_cast<NoteNumber>(message.getNoteNumber());
-//            auto channel = message.getChannel() - 1;
-//
-//        }
-//    }
+    for (auto iter: midiBuffer) {
+        const juce::MidiMessage &message = iter.getMessage();
+        int samplePosition = iter.samplePosition;
+        if (message.isNoteOn(true)) {
+            handleNoteOn(output, message, samplePosition);
+        } else if (message.isNoteOff(true)) {
+            handleNoteOff(output, message, samplePosition);
+        } else {
+            output.addEvent(message, samplePosition);
+        }
+    }
 
     midiBuffer.swapWith(output);
 }
@@ -52,7 +55,7 @@ void Engine::sendAllNotesOff(juce::MidiBuffer &output, int samplePosition, int c
         auto note = *it;
         while (isValidNote(note)) {
             // TODO: release velocity?
-            noteOff(output, samplePosition, channelIndex, note, MaxVelocity);
+            writeNoteOff(output, samplePosition, channelIndex, note, MaxVelocity);
             note = *(++it);
         }
     }
@@ -99,16 +102,65 @@ void Engine::handleOmniToggledNote(juce::MidiBuffer &output, NoteNumber note) {
     if (isNotePlayingOnAnyChannel(note)) {
         omniNoteOff(output, note);
     } else {
-        noteOn(output, 0, 0, note, MaxVelocity);
+        writeNoteOn(output, 0, 0, note, MaxVelocity);
     }
 }
 
 void Engine::omniNoteOff(juce::MidiBuffer &output, NoteNumber note) {
+    for (int channelIndex = 0; channelIndex < CHANNEL_COUNT; channelIndex++) {
+        auto channel = m_channels[channelIndex];
+        if (channel.noteState(note).isPlaying()) {
+            writeNoteOff(output, 0, channelIndex, note, MaxVelocity);  // TODO: velocity
+        }
+    }
+}
 
+void Engine::handleNoteOn(juce::MidiBuffer &output, const juce::MidiMessage &message, int samplePosition) {
+    auto note = static_cast<NoteNumber>(message.getNoteNumber());
+    auto channelIndex = message.getChannel() - 1;
+    auto channel = m_channels[channelIndex];
+    NoteStatus status = channel.noteState(note).status;
+    if (status == NoteStatus::Playing) {
+        if (m_parameters.releaseTrigger() == ReleaseTrigger::SameKeyDown) {
+            writeNoteOff(output, samplePosition, channelIndex, note, MaxVelocity);
+        } else {
+            auto t = m_timePosition.update(samplePosition);
+            channel.beginRelease(note, MaxVelocity, t);
+        }
+    } else if (status == NoteStatus::NotPlaying) {
+        while (channel.playingCount() >= m_parameters.maxVoices()) {
+            NoteNumber noteToSteal = selectNoteToSteal(m_parameters.stealingStrategy(), channel, m_rng, note);
+            if (isValidNote(noteToSteal)) {
+                writeNoteOff(output, samplePosition, channelIndex, noteToSteal, MaxVelocity);
+            } else {
+                // safety feature
+                break;
+            }
+        }
+        if (channel.playingCount() < m_parameters.maxVoices()) {
+            writeNoteOn(output, samplePosition, channelIndex, note, Velocity(message.getVelocity()));
+        }
+    }
+}
+
+void Engine::handleNoteOff(juce::MidiBuffer &output, const juce::MidiMessage &message, int samplePosition) {
+    auto note = static_cast<NoteNumber>(message.getNoteNumber());
+    auto channelIndex = message.getChannel() - 1;
+    auto channel = m_channels[channelIndex];
+    NoteStatus status = channel.noteState(note).status;
+    if (status == NoteStatus::Playing) {
+        // discard
+    } else if (status == NoteStatus::ReadyToRelease) {
+        writeNoteOff(output, samplePosition, channelIndex, note, MaxVelocity);
+    } else {
+        // not playing, but no reason not to let it through
+        output.addEvent(message, samplePosition);
+    }
 }
 
 void
-Engine::noteOn(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity) {
+Engine::writeNoteOn(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note,
+                    Velocity velocity) {
     auto t = m_timePosition.update(samplePosition);
     m_channels[channelIndex].activateNote(note, velocity, t);
     auto message = juce::MidiMessage::noteOn(channelIndex + 1, note, velocity.value());
@@ -116,7 +168,8 @@ Engine::noteOn(juce::MidiBuffer &output, int samplePosition, int channelIndex, N
 }
 
 void
-Engine::noteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note, Velocity velocity) {
+Engine::writeNoteOff(juce::MidiBuffer &output, int samplePosition, int channelIndex, NoteNumber note,
+                     Velocity velocity) {
     m_channels[channelIndex].deactivateNote(note);
     auto message = juce::MidiMessage::noteOff(channelIndex + 1, note, velocity.value());
     output.addEvent(message, samplePosition);
